@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity >=0.4.22 <0.9.0;
 
 // This import is automatically injected by Remix
@@ -29,13 +28,13 @@ contract testSuite {
         Token token = Token(tokenAddress);
         Assert.equal(
             token.balanceOf(address(factory)),
-            factory.INITIAL_MINT(),
-            "Balance of Factory doesn't equal INITIAL_MINT"
+            factory.INITIAL_SUPPLY(),
+            "Balance of Factory doesn't equal INITIAL_SUPPLY"
         );
         Assert.equal(
             token.totalSupply(),
-            factory.INITIAL_MINT(),
-            "Total supply doesn't equal INITIAL_MINT"
+            factory.INITIAL_SUPPLY(),
+            "Total supply doesn't equal INITIAL_SUPPLY"
         );
         Assert.equal(
             factory.tokens(tokenAddress),

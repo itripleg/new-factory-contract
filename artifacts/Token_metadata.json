@@ -21,6 +21,16 @@
 						"internalType": "uint256",
 						"name": "initialMint",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxSupply",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "factoryAddress",
+						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -163,6 +173,19 @@
 				"type": "event"
 			},
 			{
+				"inputs": [],
+				"name": "MAX_SUPPLY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -240,6 +263,37 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "factory",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "mint",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -452,14 +506,6 @@
 		"remappings": []
 	},
 	"sources": {
-		"@openzeppelin/contracts/access/Ownable.sol": {
-			"keccak256": "0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6",
-				"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a"
-			]
-		},
 		"@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
 			"keccak256": "0x880da465c203cec76b10d72dbd87c80f387df4102274f23eea1f9c9b0918792b",
 			"license": "MIT",
@@ -501,11 +547,11 @@
 			]
 		},
 		"Token.sol": {
-			"keccak256": "0x68249bb3eb4bfa26f73155852a115f95e93081edf47f1eb627dc7d11e2647a0d",
+			"keccak256": "0xe406505fafb2668e5244425765aea9b3642d234a916d049f83d74213d84db09c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0ab319be79105d15620a524136cb54dfb13b2bc6865adb5c12487e21c44c398f",
-				"dweb:/ipfs/QmXmfUe9JpDLV5gftSixVPEkL8CsnHNLoVJBzf5QEbUrFB"
+				"bzz-raw://910b5187e0d04c2e9a57044d167ea420972d7ea29024d62fcfe605b0cf0e7684",
+				"dweb:/ipfs/QmVGh8jNmk2CYEErfnw1ZTJAwuMhW1TJ1eqyYmWN6F2e3g"
 			]
 		}
 	},

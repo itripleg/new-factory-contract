@@ -1,15 +1,15 @@
-//SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
-import "./Token.sol";
+import {Token} from "./Token.sol";
 
 contract TokenFactory {
     uint public constant DECIMALS = 10 ** 18;
     uint public constant MAX_SUPPLY = (10 ** 9) * DECIMALS;
-    uint public constant INITIAL_MINT = (MAX_SUPPLY * 20) / 100;
-    uint public constant k = 46875;
-    uint public constant offset = 18750000000000000000000000000000;
-    uint public constant SCALING_FACTOR = 10 ** 39;
+    uint public constant INITIAL_SUPPLY = (MAX_SUPPLY * 20) / 100; // Initial minted supply (20% of max supply)
+    uint public constant LINEAR_COEFFICIENT = 46875; // Represents 'k' in the bonding curve equation
+    uint public constant OFFSET = 18750000000000000000000000000000; // Represents the offset in the bonding curve
+    uint public constant SCALING_FACTOR = 10 ** 39; // Scaling factor to normalize values
 
     mapping(address => bool) public tokens;
 
@@ -17,8 +17,7 @@ contract TokenFactory {
         string memory name,
         string memory ticker
     ) external returns (address) {
-        // initialOwner = msg.sender;
-        Token token = new Token(name, ticker, INITIAL_MINT);
+        Token token = new Token(name, ticker, INITIAL_SUPPLY);
         tokens[address(token)] = true;
         return address(token);
     }
@@ -26,22 +25,31 @@ contract TokenFactory {
     function buy(address tokenAddress, uint amount) external payable {
         require(tokens[tokenAddress] == true, "Token doesn't exist.");
         Token token = Token(tokenAddress);
-        uint availableSupply = MAX_SUPPLY - INITIAL_MINT - token.totalSupply();
+        uint availableSupply = MAX_SUPPLY - INITIAL_SUPPLY - token.totalSupply();
         require(amount <= availableSupply, "Not enough available supply.");
-        //calculate
+        // Calculate required ETH for purchase
         calculateRequiredEth(tokenAddress, amount);
     }
 
     function calculateRequiredEth(
         address tokenAddress,
         uint amount
-    ) public returns (uint) {
-        //amount eth = (b-a) * (f(a) + f(b) / 2)
+    ) public view returns (uint) {
         Token token = Token(tokenAddress);
-        uint b = token.TotalSupply() + amount;
-        uint a = token.totalSupply();
-        uint f_a = k * a + offset;
-        uint f_b = k * b + offset;
-        return ((b - a) * (f_a + f_b)) / (2 * SCALING_FACTOR);
+
+        // Current supply sold (a)
+        uint supplySoldStart = token.totalSupply();
+
+        // Updated supply after the purchase (b)
+        uint supplySoldEnd = supplySoldStart + amount;
+
+        // Price at supply `a` based on the bonding curve
+        uint priceAtStart = LINEAR_COEFFICIENT * supplySoldStart + OFFSET;
+
+        // Price at supply `b` based on the bonding curve
+        uint priceAtEnd = LINEAR_COEFFICIENT * supplySoldEnd + OFFSET;
+
+        // Required ETH = (supplyEnd - supplyStart) * (priceAtStart + priceAtEnd) / 2
+        return ((supplySoldEnd - supplySoldStart) * (priceAtStart + priceAtEnd)) / (2 * SCALING_FACTOR);
     }
 }
